@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentimentapi-deployment
+  labels:
+    app: sentimentapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentimentapi
+  template:
+    metadata:
+      labels:
+        app: sentimentapi
+    spec:
+      containers:
+        - name: sentimentapi
+          image: sandipanghosh/sentiment_tf:v2
+          ports:
+            - containerPort: 5000

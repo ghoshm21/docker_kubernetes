@@ -1,0 +1,164 @@
+
+docker hub:sandipanghosh
+sandipanghosh/ml_ai_api
+
+sudo docker login --username=sandipanghosh
+
+sudo docker images
+
+sudo docker tag b40e43ebf8da sandipanghosh/sentiment_tf:v2
+sudo docker push sandipanghosh/sentiment_tf
+
+
+# after install add user to the right group
+sudo usermod -aG docker username
+
+# docker image build
+sudo docker image build -t handson_docker_1 .
+
+# run the docker image in detach mode
+sudo docker container run -d --name sentiment_tf_v2 -p 5000:5000 sentiment_tf_v2
+
+# login to running docker
+sudo docker exec -it handson_docker_1 /bin/bash
+  # to exit the shell with out killing the container use ctl+p+q
+sudo docker exec handson_docker_1 cat newfile
+sudo docker exec handson_docker_1 ls -l
+
+# stop the container
+sudo docker stop container_name/id
+
+# start the container
+sudo docker start container_name/id
+
+# remove the container
+sudo docker rm container_name/id
+sudo docker container rm $(sudo docker container ls -aq) -f
+
+# remove all images and EVERYTHING
+sudo docker system prune
+sudo docker system prune -a
+sudo docker rmi Image Image
+
+# check history
+sudo docker history handson_docker_1
+
+# inspecte the docker image
+sudo docker image inspecte handson_docker_1
+
+# check docker port
+sudo docker port handson_docker_1
+
+# ip of the container
+sudo docker inspect -f "{{ .NetworkSettings.Networks.nat.IPAddress }}" handson_docker_1
+
+# get the individual docker log
+sudo docker logs handson_docker_1
+
+--------------------------------------------------------------------------------
+# docker swarm
+sudo docker swarm init
+
+# check the node
+sudo docker node ls
+
+# add managers
+sudo docker swarm join-token manager
+  -- this will give you the token, run that in the node2/node3
+sudo docker swarm join --token SWMTKN-1-1nmnxr1wrut7dxpe8iuz5bc81ppb1qk3xgi3ty6deritx8ixoa-17gn5n6vfnvs5f9xdbt1mph13 192.168.1.24:2377
+
+# add workers
+sudo docker swarm join-token worker
+  -- this will give you the token, run that in the worker2/worker3
+sudo docker swarm join --token SWMTKN-1-1nmnxr1wrut7dxpe8iuz5bc81ppb1qk3xgi3ty6deritx8ixoa-8znssogs49q4g4foh2ce6jf8v 192.168.1.24:2377
+
+
+# rotate the worker, so new worker need new tocken, existing is not impacted
+sudo docker swarm join-token --rotate worker
+
+--------------------------------------------------------------------------------
+# install docker compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+# check version
+docker-compose --version
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- minikube
+https://phoenixnap.com/kb/install-minikube-on-ubuntu
+--------------------------
+minikube start
+
+minikube ssh
+exit
+
+minikube stop
+
+minikube status
+
+minikube delete
+
+minikube addons list
+
+minikube dashboard
+
+minikube dashboard --url
+--------------------------
+
+kubectl config view
+
+kubectl
+
+kubectl version
+
+kubectl cluster-info
+
+kubectl get all
+
+kubectl get nodes
+
+kubectl get pods
+
+kubectl delete pod po-name
+
+kubectl port-forward my-nginx 8080:80
+
+kubectl run my-nginx --image=nginx:alpine
+
+-- dry run a pod
+kubectl create -f nginx-pod.yml --dry-run=client --validate=true
+kubectl apply -f ./sentimentapp-deployment.yml --dry-run=client --validate=true
+
+-- create or update existing resource
+kubectl apply -f ./sentimentapp-deployment.yml
+kubectl apply -f nginx-pod.yml
+or
+kubectl create -f nginx-pod.yml --save-config
+
+kubectl create -f nginx-pod.yml
+kubectl apply -f nginx-pod.yml
+kubectl get pod my-nginx -o yaml
+
+-- verify
+kubectl get svc
+
+-- get the pod details
+kubectl get pods
+-- describe
+kubectl describe pod my-nginx
+
+-- port forwards
+kubectl port-forward sentimentapi-deployment-6cb57965bf-kspcx 5000:5000
+
+
+-- login to the pod
+kubectl exec my-nginx -it sh
+
+-- edit live imagedont do it in production
+kubectl edit -f nginx-pod.yml
+
+-- delete
+kubectl delete -f nginx-pod.yml
+
+------ POD health ------

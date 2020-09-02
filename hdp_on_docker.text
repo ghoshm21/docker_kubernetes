@@ -1,0 +1,22 @@
+get all steps and files from :- https://www.cloudera.com/tutorials/sandbox-deployment-and-install-guide/3.html
+# get hdp running for 1st time
+cd /path/to/script
+sudo sh ./docker-deploy-hdp265.sh
+
+# start the hdp
+sudo docker start sandbox-hdp
+sudo docker start sandbox-proxy
+
+# stop the HDP
+sudo docker stop sandbox-hdp
+sudo docker stop sandbox-proxy
+
+# remove it
+sudo docker rm sandbox-hdp
+sudo docker rm sandbox-proxy
+
+# remove everything
+sudo docker system prune -a
+
+# remove the image
+sudo docker rmi hortonworks/sandbox-hdp:{release}

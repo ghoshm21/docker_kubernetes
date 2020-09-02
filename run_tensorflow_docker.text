@@ -1,0 +1,7 @@
+-- Run TF in docker
+sudo docker run -u $(id -u):$(id -g) -v /home/sandipan/Documents/deep_learning/sentiment_analysis:/tf/sentiment_analysis -p 8888:8888 --gpus all -it tensorflow/tensorflow:latest-gpu-jupyter
+
+-- get into a running docker file
+docker exec -it great_pascal /bin/bash
+
+
