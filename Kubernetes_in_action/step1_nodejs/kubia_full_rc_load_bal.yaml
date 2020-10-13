@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: kubia-full-rc-loadbal
+    namespace: sentiment-namespace
+spec:
+    clusterIP: 10.3.241.14
+    externalTrafficPolicy: Cluster
+    ports:
+    - nodePort: 30874
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: kubia
+    sessionAffinity: None
+    type: LoadBalancer
+status:
+    loadBalancer:
+      ingress:
+      - ip: 34.122.58.32
+

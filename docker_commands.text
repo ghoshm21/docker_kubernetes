@@ -1,3 +1,4 @@
+# login to docker hub
 
 docker hub:sandipanghosh
 sandipanghosh/ml_ai_api
@@ -8,8 +9,85 @@ sudo docker images
 
 sudo docker tag b40e43ebf8da sandipanghosh/sentiment_tf:v2
 sudo docker push sandipanghosh/sentiment_tf
+---------------------------------------------------------------------
+################################
+## Google Cloud
+https://cloud.google.com/sdk/docs/install#deb
+
+gcloud init
+
+-- create a 3 nodes cluster (f1-micro no supported any more)
+gcloud container clusters create kubia --num-nodes 3 --machine-type g1-small --zone us-central1-c
+
+# cluster info
+kubectl cluster-info
+
+# get nodes details
+kubectl get nodes
+
+# describe a node
+kubectl describe node nodename
+
+# put nodes on gpu=false label
+kubectl label node gke-kubia-default-pool-a6beaba8-32kq gpu=false
+kubectl label node gke-kubia-default-pool-a6beaba8-9pxm gpu=false
+kubectl label node gke-kubia-default-pool-a6beaba8-ppbj gpu=false
+
+# check the label
+kubectl get nodes -L gpu
+kubectl get nodes -l gpu=false
+
+# create a namespace
+kubectl get ns
+kubectl create -f sentiment_namespace.yaml
+
+# deploy the pod from yaml
+kubectl create -f kubia_full.yaml
+
+# delete the pod
+kubectl delete pods kubia-full -n sentiment-namespace
+
+# deploy replica set
+kubectl create -f kubia_full_rs.yaml
+
+# get the details
+kubectl get rs -n sentiment-namespace
+
+# delete the replica set
+kubectl delete rs kubia-full-rc -n sentiment-namespace
 
 
+# run a pod directly
+kubectl run kubia --image=sandipanghosh/kubia --port=8080 --generator=run/v1
+
+kubectl get pods -o wide
+kubectl get pods -n sentiment-namespace -o wide
+
+# expose pod using a loadBalancer to outside
+kubectl expose pod kubia-full --type=LoadBalancer --name kubia-http -n sentiment-namespace
+
+kubectl expose rs kubia-full-rc --port=80 --target-port=8080 --type=LoadBalancer --name kubia-http -n sentiment-namespace
+
+# get all services loadBalancer
+kubectl get services -n sentiment-namespace
+
+# generate the yaml file
+kubectl get services -n sentiment-namespace -o yaml
+
+
+kubectl delete LoadBalancer kubia-http -n sentiment-namespace
+
+# get the ip address
+kubectl get services
+kubectl get services -o wide -n sentiment-namespace
+
+# delete the loadBalancer
+
+
+kubectl get replicationcontrollers
+
+
+---------------------------------------------------------------------
 # after install add user to the right group
 sudo usermod -aG docker username
 
@@ -46,6 +124,9 @@ sudo docker history handson_docker_1
 # inspecte the docker image
 sudo docker image inspecte handson_docker_1
 
+# inspecte the docker container
+sudo docker inspecte container_name/id
+
 # check docker port
 sudo docker port handson_docker_1
 
@@ -55,6 +136,11 @@ sudo docker inspect -f "{{ .NetworkSettings.Networks.nat.IPAddress }}" handson_d
 # get the individual docker log
 sudo docker logs handson_docker_1
 
+# stop the container
+sudo docker stop container_name/id
+
+# remove the container
+sudo docker rm container_name/id
 --------------------------------------------------------------------------------
 # docker swarm
 sudo docker swarm init

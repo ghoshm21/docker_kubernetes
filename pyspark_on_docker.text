@@ -1,0 +1,3 @@
+sudo docker pull jupyter/pyspark-notebook:spark-2
+
+sudo docker run -u $(id -u):$(id -g) -v /home/sandipan/Documents/deep_learning/sentiment_analysis:/home/jovyan/sentiment_analysis -p 1001:8888 -it jupyter/pyspark-notebook:spark-2

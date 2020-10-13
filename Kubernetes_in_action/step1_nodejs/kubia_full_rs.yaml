@@ -1,0 +1,31 @@
+# with replication set, it's belong to v1 beta api
+apiVersion: apps/v1beta2
+kind: ReplicaSet
+metadata:
+  name: kubia-full-rc
+  namespace: sentiment-namespace
+spec:
+  replicas: 3
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - kubia
+  template:
+    metadata:
+        name: kubia-full
+        namespace: sentiment-namespace
+        labels:
+          app: kubia
+          env: test
+          type: data-process
+    spec:
+      nodeSelector:
+        gpu: "false"
+      containers:
+        - image: sandipanghosh/kubia
+          name: kubia-container
+          ports:
+            - containerPort: 8080
+              protocol: TCP
